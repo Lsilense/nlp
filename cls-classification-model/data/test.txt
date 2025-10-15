@@ -1,0 +1,8 @@
+# This file contains the test data for evaluating the classification model.
+# Each line represents a separate test instance, formatted as required by the model.
+
+label1, text of the first test instance
+label2, text of the second test instance
+label1, text of the third test instance
+label3, text of the fourth test instance
+label2, text of the fifth test instance

@@ -1,0 +1,8 @@
+# This file contains the training data for the classification model.
+# Each line represents a training example, formatted as "text<TAB>label".
+
+This is a sample training text for the classification model.	1
+Another example of training text for the classification model.	0
+More training data to help the model learn.	1
+Yet another training example for classification.	0
+Final example of training text for the classification model.	1
