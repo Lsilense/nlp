@@ -36,8 +36,6 @@ def main():
             outputs = model(**inputs, labels=labels)
             loss = outputs.loss
             loss.backward()
-            optimizer.step()
-            optimizer.zero_grad()
     
     # Evaluation
     model.eval()
