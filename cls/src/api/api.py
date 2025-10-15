@@ -1,30 +1,32 @@
-from flask import Flask, request, jsonify
-from src.models.bert.model_bert import BertModel
-from src.models.cnn.model_cnn import CnnModel
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from src.models.bert.model_bert import ModelBERT
+from src.models.cnn.model_cnn import CNNModel
 
-app = Flask(__name__)
+app = FastAPI()
 
-# Initialize models
-bert_model = BertModel()
-cnn_model = CnnModel()
 
-@app.route('/predict/bert', methods=['POST'])
-def predict_bert():
-    data = request.json
-    text = data.get('text')
-    if not text:
-        return jsonify({'error': 'No text provided'}), 400
-    prediction = bert_model.predict(text)
-    return jsonify({'prediction': prediction})
+# 定义请求体
+class TextRequest(BaseModel):
+    text: str
 
-@app.route('/predict/cnn', methods=['POST'])
-def predict_cnn():
-    data = request.json
-    text = data.get('text')
-    if not text:
-        return jsonify({'error': 'No text provided'}), 400
-    prediction = cnn_model.predict(text)
-    return jsonify({'prediction': prediction})
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# 初始化模型（此处需根据实际情况加载模型参数和配置）
+bert_model = ModelBERT(...)  # 填写必要的配置或加载已训练权重
+cnn_model = CNNModel(...)  # 填写必要的配置或加载已训练权重
+
+
+@app.post("/predict/bert")
+async def predict_bert(request: TextRequest):
+    if not request.text:
+        raise HTTPException(status_code=400, detail="No text provided")
+    prediction = bert_model.predict(request.text)
+    return {"prediction": prediction}
+
+
+@app.post("/predict/cnn")
+async def predict_cnn(request: TextRequest):
+    if not request.text:
+        raise HTTPException(status_code=400, detail="No text provided")
+    prediction = cnn_model.predict(request.text)
+    return {"prediction": prediction}
