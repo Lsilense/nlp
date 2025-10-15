@@ -1,31 +1,63 @@
-class CNNModel:
-    def __init__(self, input_shape, num_classes):
-        self.input_shape = input_shape
-        self.num_classes = num_classes
-        self.model = self.build_model()
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
 
-    def build_model(self):
-        from tensorflow.keras.models import Sequential
-        from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 
-        model = Sequential()
-        model.add(Conv2D(32, (3, 3), activation='relu', input_shape=self.input_shape))
-        model.add(MaxPooling2D(pool_size=(2, 2)))
-        model.add(Conv2D(64, (3, 3), activation='relu'))
-        model.add(MaxPooling2D(pool_size=(2, 2)))
-        model.add(Flatten())
-        model.add(Dense(128, activation='relu'))
-        model.add(Dropout(0.5))
-        model.add(Dense(self.num_classes, activation='softmax'))
+class CNNModel(nn.Module):
+    def __init__(self, input_channels, num_classes):
+        super(CNNModel, self).__init__()
+        self.conv1 = nn.Conv2d(input_channels, 32, kernel_size=3, padding=1)
+        self.pool1 = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
+        self.pool2 = nn.MaxPool2d(2, 2)
+        self.flatten_dim = None  # will be set after seeing data
+        self.fc1 = nn.Linear(64 * 7 * 7, 128)  # 7*7 is a placeholder, update as needed
+        self.dropout = nn.Dropout(0.5)
+        self.fc2 = nn.Linear(128, num_classes)
 
-        model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-        return model
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        x = self.pool1(x)
+        x = F.relu(self.conv2(x))
+        x = self.pool2(x)
+        x = torch.flatten(x, 1)
+        x = F.relu(self.fc1(x))
+        x = self.dropout(x)
+        x = self.fc2(x)
+        return x
 
-    def train(self, train_data, train_labels, epochs=10, batch_size=32, validation_data=None):
-        self.model.fit(train_data, train_labels, epochs=epochs, batch_size=batch_size, validation_data=validation_data)
 
-    def evaluate(self, test_data, test_labels):
-        return self.model.evaluate(test_data, test_labels)
+# 训练、评估和预测函数
+def train(model, train_loader, criterion, optimizer, device, epochs=10):
+    model.train()
+    for epoch in range(epochs):
+        for data, labels in train_loader:
+            data, labels = data.to(device), labels.to(device)
+            optimizer.zero_grad()
+            outputs = model(data)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
 
-    def predict(self, input_data):
-        return self.model.predict(input_data)
+
+def evaluate(model, test_loader, device):
+    model.eval()
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for data, labels in test_loader:
+            data, labels = data.to(device), labels.to(device)
+            outputs = model(data)
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+    return correct / total
+
+
+def predict(model, input_data, device):
+    model.eval()
+    with torch.no_grad():
+        input_data = input_data.to(device)
+        outputs = model(input_data)
+        _, predicted = torch.max(outputs.data, 1)
+    return predicted.cpu().numpy()
