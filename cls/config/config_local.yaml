@@ -1,7 +1,7 @@
 training:
   batch_size: 32
   epochs: 10
-  lr: 0.001
+  lr: 0.002334
 
 data:
   train_file: data/train.txt
