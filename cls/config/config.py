@@ -23,6 +23,7 @@ def parse_args(argv: Optional[list] = None) -> Dict[str, Any]:
     parser.add_argument("--model", type=str, default="cnn", help="模型类型")
     parser.add_argument("--seed", type=int, default=42, help="随机种子")
     parser.add_argument("--num_workers", type=int, default=4, help="DataLoader 的 num_workers")
+    parser.add_argument("--max_len", type=int, default=64, help="最大序列长度")
     parser.add_argument("--bert_model", type=str, default="bert-base-chinese", help="BERT 模型名称")
     parser.add_argument("--num_classes", type=int, default=3, help="类别数")
     parser.add_argument("--output_dir", type=str, default="outputs", help="输出目录")
