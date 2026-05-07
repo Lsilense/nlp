@@ -1,0 +1,7 @@
+training:
+  batch_size: 24
+  epochs: 3
+
+data:
+  train_file: data/train.txt
+  test_file: data/test.txt

@@ -1,0 +1,12 @@
+{
+  "f63579f508ad043b958af0b7b8ab04cd503dd05802987707913f4c3d5d760bc5": {
+    "text": "你好啊",
+    "prediction": "社会",
+    "confidence": 1.0,
+    "all_probabilities": {
+      "社会": 1.0
+    },
+    "inference_time": 0.0,
+    "cached_at": 1763220908.4706597
+  }
+}

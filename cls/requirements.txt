@@ -1,0 +1,9 @@
+fastapi==0.121.1
+jieba==0.42.1
+pydantic==2.12.4
+PyYAML==6.0.2
+PyYAML==6.0.3
+torch==2.5.1
+tqdm==4.67.1
+transformers==4.51.3
+uvicorn==0.38.0

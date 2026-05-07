@@ -1,0 +1,10 @@
+*.psd
+*.mp4
+*.zip
+*.log
+*.pth
+*.h5
+*.bin
+*.safetensors
+*.msgpack
+**/output_model/

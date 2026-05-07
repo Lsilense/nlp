@@ -1,0 +1,9 @@
+{
+    "http.proxy": "http://localhost:9910",
+    "https.proxy": "https://localhost:9910",
+    "http.proxyStrictSSL": false,
+    "files.maxFileSizeMB": 50,
+    "editor.largeFileOptimizations": true,
+    "files.maxMemoryForLargeFilesMB": 4096,
+    "editor.wordWrapColumn": 180
+}
